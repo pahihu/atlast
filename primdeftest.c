@@ -23,7 +23,7 @@ prim phhmmss()
 
     Sl(1);
     So(2);
-    lt = localtime(&S0);
+    lt = localtime((const long *)&S0);
     S0 = lt->tm_hour;
     Push = lt->tm_min;
     Push = lt->tm_sec;

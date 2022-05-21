@@ -1429,7 +1429,7 @@ prim P_tan()			      /* Tangent */
 prim P_dot()			      /* Print top of stack, pop it */
 {
     Sl(1);
-    V printf(base == 16 ? "%lX" : "%ld ", S0);
+    V printf(base == 16 ? "%llX" : "%lld ", S0);
     Pop;
 }
 
@@ -1437,7 +1437,7 @@ prim P_question()		      /* Print value at address */
 {
     Sl(1);
     Hpc(S0);
-    V printf(base == 16 ? "%lX" : "%ld ", *((stackitem *) S0));
+    V printf(base == 16 ? "%llX" : "%lld ", *((stackitem *) S0));
     Pop;
 }
 
@@ -1455,7 +1455,7 @@ prim P_dots()			      /* Print entire contents of stack */
         V printf("Empty.");
     else {
 	for (tsp = stack; tsp < stk; tsp++) {
-            V printf(base == 16 ? "%lX" : "%ld ", *tsp);
+            V printf(base == 16 ? "%llX" : "%lld ", *tsp);
 	}
     }
 }
@@ -2404,12 +2404,15 @@ prim P_bracktick()		      /* Compile in-line code address */
 prim P_execute()		      /* Execute word pointed to by stack */
 {
     dictword *wp;
+    dictword **savIP;
 
     Sl(1);
     wp = (dictword *) S0;	      /* Load word address from stack */
     Pop;			      /* Pop data stack before execution */
+    savIP = ip; ip = NULL;
     exword(wp); 		      /* Recursively call exword() to run
 					 the word. */
+    ip = savIP;
 }
 
 prim P_body()			      /* Get body address for word */
@@ -3531,7 +3534,7 @@ int atl_prologue(sp)
 	    if (strncmp(sp + 3, proname[i].pname,
 		    strlen(proname[i].pname)) == 0) {
                 if ((ap = strchr(sp + 3, ' ')) != NULL) {
-                    V sscanf(ap + 1, "%li", proname[i].pparam);
+                    V sscanf(ap + 1, "%lli", proname[i].pparam);
 #ifdef PROLOGUEDEBUG
 V printf("Prologue set %sto %ld\n", proname[i].pname, *proname[i].pparam);
 #endif

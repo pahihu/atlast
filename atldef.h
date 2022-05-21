@@ -132,7 +132,7 @@ extern int cstrbuf;
 #endif /* NOMANGLE */
 extern void P_create(), P_dodoes();
 #else  /* EXPORT */
-#define Exported static
+#define Exported /*static*/
 #endif /* EXPORT */
 
 #ifndef NOMEMCHECK
@@ -152,12 +152,12 @@ void stakover(), rstakover(), heapover(), badpointer(),
 #endif
 
 /* Functions called by exported extensions. */
-extern void atl_primdef(), atl_error();
-extern dictword *atl_lookup(), *atl_vardef();
-extern stackitem *atl_body();
-extern int atl_exec();
+extern void atl_primdef(struct primfcn*), atl_error(char*);
+extern dictword *atl_lookup(char*), *atl_vardef(char*,int);
+extern stackitem *atl_body(dictword*);
+extern int atl_exec(dictword*);
 #ifdef EXPORT
-extern char *atl_fgetsp();
+extern Exported char *atl_fgetsp(char*,int,FILE*);
 #endif
 
 #ifdef MSDOS

@@ -16,6 +16,8 @@
 #include <signal.h>
 #include "atldef.h"
 
+#include <time.h>
+
 #define FALSE	0
 #define TRUE	1
 
@@ -35,6 +37,23 @@ static void ctrlc(sig)
     if (sig == SIGINT)
 	atl_break();
 }
+
+prim pclock()
+{
+    So(1);
+    Push = ((1000.0 * clock()) / CLOCKS_PER_SEC);
+}
+
+prim pbye()
+{
+    exit(0);
+}
+
+static struct primfcn extp[] = {
+    {"0CLOCK", pclock},
+    {"0BYE",   pbye},
+    {NULL,     (codeptr)0}
+};
 
 /*  MAIN  --  Main program.  */
 
@@ -116,6 +135,9 @@ int main(argc, argv)
 	    }
 	}
      }
+
+    atl_init();
+    atl_primdef(extp);
 
     /* If any include files were named, load each in turn before
        we execute the program. */
